@@ -1,6 +1,5 @@
 package com.fakhrifajar.myapplication.view.dashboard
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -11,12 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.fakhrifajar.myapplication.R
 import com.fakhrifajar.myapplication.adapter.LoadingStateAdapter
 import com.fakhrifajar.myapplication.adapter.UserAdapter
-import com.fakhrifajar.myapplication.data.network.response.DataItem
 import com.fakhrifajar.myapplication.databinding.ActivityThirdScreenBinding
-import com.fakhrifajar.myapplication.utils.EMAIL
-import com.fakhrifajar.myapplication.utils.FIRST_NAME
-import com.fakhrifajar.myapplication.utils.IMAGE
-import com.fakhrifajar.myapplication.utils.LAST_NAME
 import com.fakhrifajar.myapplication.view.ViewModelFactory
 
 class ThirdScreenActivity : AppCompatActivity() {
@@ -25,6 +19,8 @@ class ThirdScreenActivity : AppCompatActivity() {
     private val viewModel: ThirdScreenViewModel by viewModels<ThirdScreenViewModel> {
         ViewModelFactory.getInstance(this)
     }
+
+    private val sharedViewModel: SharedViewModel by viewModels { ViewModelFactory.getInstance(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +40,10 @@ class ThirdScreenActivity : AppCompatActivity() {
         }
 
         binding.rvUser.layoutManager = LinearLayoutManager(this)
-        val adapter = UserAdapter { user -> moveToSecondScreen(user) }
+        val adapter = UserAdapter { user ->
+            val fullName = "${user.firstName} ${user.lastName}"
+            sharedViewModel.setSelectedUserName(fullName)
+        }
         binding.rvUser.adapter = adapter.withLoadStateFooter(
             footer = LoadingStateAdapter {
                 adapter.retry()
@@ -54,15 +53,5 @@ class ThirdScreenActivity : AppCompatActivity() {
         viewModel.users.observe(this) {
             adapter.submitData(lifecycle, it)
         }
-    }
-
-    private fun moveToSecondScreen(data: DataItem) {
-        val intent = Intent(this@ThirdScreenActivity, SecondScreenActivity::class.java).apply {
-            putExtra(FIRST_NAME, data.firstName)
-            putExtra(LAST_NAME, data.lastName)
-            putExtra(IMAGE, data.avatar)
-            putExtra(EMAIL, data.email)
-        }
-        startActivity(intent)
     }
 }
