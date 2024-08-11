@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Suitmedia Mobile Test</string>
+    <string name="user_name">Name</string>
+    <string name="palindrome">Palindrome</string>
+    <string name="check">CHECK</string>
+    <string name="next">NEXT</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="welcome">Welcome</string>
+    <string name="name_holder">John Doe</string>
+    <string name="selected_user_name">Selected User Name</string>
+    <string name="choose_user">Choose a User</string>
+    <string name="retry">Retry</string>
+</resources>
